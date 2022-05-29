@@ -1,57 +1,33 @@
-import { useRef, useState, useEffect, useLayoutEffect } from "react";
+import { useState, useCallback, useEffect, useLayoutEffect } from "react";
 // import { useWindowResize } from "./useWindowResize.hook";
+import { PDFReader } from "./PDFReader";
 
 // Components
 import { SidebarPreview } from "./SidebarPreview";
 import { ViewerWrapper, MainCanvas } from "./components.styled";
 import { EditableArea } from "./EditableArea";
 
-// helpers
-import { getAllPDFpage, loadPdf } from "./helpers";
 // import { renderImage } from "../Fabric/helpers/renderImage.helper";
 // import { fabric } from "fabric";
 
 export const PDFViewer = ({ file }) => {
   const [pdf, setPdf] = useState(null);
-  const [allPDFPages, setAllPDFPages] = useState([]);
+  const [allPDFImages, setAllPDFImages] = useState([]);
   const [pageSelected, setPageSelected] = useState(0);
 
-  // const addImageToCanvas = async (pdf) => {
-  //   const { promise } = await renderPage({
-  //     pdf,
-  //     pageSelected,
-  //     canvas: mainCanvas.current,
-  //   });
-
-  //   if (enableEdition) {
-  //     promise.then(async () => {
-  //       const imageUrl = mainCanvas.current.toDataURL("image/jpeg", 1.0);
-  //       console.log(imageUrl);
-  //       const blob = await fetch(imageUrl).then((res) => res.blob());
-  //       _imageToBeTreated.current = await renderImage(blob);
-  //       mainCanvas.current = new fabric.Canvas(mainCanvas.current, {
-  //         height: 1000,
-  //         width: 1000,
-  //       });
-  //       mainCanvas.current.add(_imageToBeTreated.current);
-  //     });
-  //     // _treatmentArea.current.centerObject(_imageToBeTreated.current);
-  //   }
-  // };
-
-  // load complete file;
   useEffect(() => {
-    loadPdf(file).then(setPdf).catch(alert);
+    file && PDFReader.loadPdf(file).then(setPdf).catch(alert);
   }, [file]);
 
-  // load every page and save in state
   useLayoutEffect(() => {
-    getAllPDFpage(pdf).then(setAllPDFPages);
+    if (pdf) {
+      pdf.toImages().then(setAllPDFImages);
+    }
   }, [pdf]);
 
-  //   useWindowResize({ onResizeEnd: () => renderPage({ pdf, pageNumber: page }) });
+  // useWindowResize({ onResizeEnd: () => renderPage({ pdf, pageNumber: page }) });
 
-  if (!pdf || !allPDFPages.length) {
+  if (!pdf || !allPDFImages.length) {
     return null;
   }
 
@@ -59,8 +35,16 @@ export const PDFViewer = ({ file }) => {
     setPageSelected(thumbnailSelected);
   };
 
-  const handleSaveSelectedPage = (blobFile) => {
-    console.log(blobFile)
+  const onSaveSelectedPage = (imageData) => {
+    const newAllPDFImages = [...allPDFImages];
+    newAllPDFImages[pageSelected] = imageData;
+    setAllPDFImages(newAllPDFImages);
+  };
+
+  const onRemoveSelectedPage = () => {
+    setAllPDFImages((allPDFImages) =>
+      allPDFImages.filter((i) => i !== allPDFImages[pageSelected])
+    );
   };
 
   return (
@@ -72,7 +56,7 @@ export const PDFViewer = ({ file }) => {
         prev
       </button>
       <button
-        disabled={pageSelected === allPDFPages.length}
+        disabled={pageSelected === allPDFImages.length}
         onClick={() => setPageSelected(pageSelected + 1)}
       >
         next
@@ -80,13 +64,14 @@ export const PDFViewer = ({ file }) => {
       <ViewerWrapper>
         <SidebarPreview
           pageSelected={pageSelected}
-          allPDFPages={allPDFPages}
+          allPDFImages={allPDFImages}
           onSelectThumbnail={onSelectThumbnail}
         />
         <MainCanvas>
           <EditableArea
-            PDFpage={allPDFPages[pageSelected]}
-            onSavePdfPage={handleSaveSelectedPage}
+            PDFImage={allPDFImages[pageSelected]}
+            onSavePDFImage={onSaveSelectedPage}
+            onRemovePDFImage={onRemoveSelectedPage}
           />
         </MainCanvas>
       </ViewerWrapper>

@@ -1,43 +1,23 @@
-import { useLayoutEffect, useRef } from "react";
-
-const renderThumbnail = async ({ PDFpage, canvas }) => {
-  canvas.width = canvas.parentNode.offsetWidth;
-
-  const viewport = PDFpage.getViewport({
-    scale: canvas.width / PDFpage.getViewport({ scale: 1 }).width,
-    rotation: 0,
-    dontFlip: false,
-  });
-  canvas.width = viewport.width;
-  canvas.height = viewport.height;
-
-  await PDFpage.render({
-    canvasContext: canvas.getContext("2d"),
-    viewport: viewport,
-  });
-};
+import { useMemo } from "react";
+import { imageDataToImg } from "./helpers";
+import { ThumbnailStyled } from "./components.styled";
 
 export const Thumbnail = ({
   pageNumber,
-  PDFpage,
+  PDFImage,
   onSelectThumbnail,
   selected,
 }) => {
-  const thumbnailCanvas = useRef(null);
-
-  useLayoutEffect(() => {
-    if (thumbnailCanvas.current && PDFpage) {
-      renderThumbnail({ PDFpage, canvas: thumbnailCanvas.current });
-    }
-  }, [PDFpage, thumbnailCanvas]);
+  const imgData = useMemo(() => imageDataToImg(PDFImage), [PDFImage]);
 
   return (
-    <div
+    <ThumbnailStyled
+      selected={selected}
       className={`thumbnail ${selected ? "selected" : "no-selected"}`}
       role="button"
       onClick={() => onSelectThumbnail(pageNumber)}
     >
-      <canvas ref={thumbnailCanvas} />
-    </div>
+      <img src={imgData} alt={`page ${pageNumber}`} />
+    </ThumbnailStyled>
   );
 };

@@ -1,25 +1,4 @@
-import { PDFJS } from "./lib";
-import { fabric } from "fabric";
-
-export const loadPdf = (file) =>
-  new Promise((resolve, reject) => {
-    const url = URL.createObjectURL(file);
-    const loadingTask = PDFJS.getDocument(url);
-    loadingTask.promise.then(resolve).catch(reject);
-  });
-
-export const getAllPDFpage = async (pdf) => {
-  if (pdf?.numPages) {
-    const allPDFpage = [...Array(pdf.numPages).keys()];
-    await allPDFpage.forEach(async (index) => {
-      const pageNumber = index + 1;
-      const PDFpage = await pdf.getPage(pageNumber);
-      allPDFpage[index] = PDFpage;
-    });
-    return allPDFpage;
-  }
-  return [];
-};
+import { fabric } from "./libs";
 
 export async function renderPage({ PDFpage, scale = 1, canvas }) {
   if (canvas) {
@@ -69,4 +48,27 @@ export const renderImage: RenderImage = (file) => {
 
     fabric.Image.fromURL(blobToUrl, resolveUrlCallback);
   });
+};
+
+export const imageDataToCanvas = (imageData) => {
+  // const width = canvas.offsetWidth || canvas.width;
+  // const height = canvas.offsetHeight || canvas.height;
+console.log(imageData)
+  let canvas = document.createElement("canvas");
+  canvas.setAttribute("width", imageData.width);
+  canvas.setAttribute("height", imageData.height);
+  canvas.getContext("2d").putImageData(imageData, 0, 0);
+  return canvas;
+};
+
+export const canvasToImageData = (canvas) => {
+  const width = canvas.offsetWidth || canvas.width;
+  const height = canvas.offsetHeight || canvas.height;
+  return canvas.getContext("2d").getImageData(0, 0, width, height);
+};
+
+export const imageDataToImg = (imageData) => {
+  console.log('dentrooooooo')
+  const canvas = imageDataToCanvas(imageData);
+  return canvas.toDataURL();
 };

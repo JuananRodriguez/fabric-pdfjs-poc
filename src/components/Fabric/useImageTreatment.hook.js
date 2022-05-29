@@ -69,7 +69,7 @@ export const useImageTreatment = ({ containerId, canvasId, file }: Props) => {
     // Adding permanent border to frame
     _treatmentArea.current.on("after:render", function () {
       _treatmentArea.current.contextContainer.strokeStyle = "red";
-      var bound = _cropArea.current.getBoundingRect();
+      const bound = _cropArea.current.getBoundingRect();
       _treatmentArea.current.contextContainer.strokeRect(
         bound.left + 0.5,
         bound.top + 0.5,
@@ -121,17 +121,17 @@ export const useImageTreatment = ({ containerId, canvasId, file }: Props) => {
   };
 
   const changeContrast = (amount: number): void => {
-    var filter = new fabric.Image.filters.Contrast({ contrast: amount });
+    const filter = new fabric.Image.filters.Contrast({ contrast: amount });
     applyFilter(filter);
   };
 
   const changeBrightness = (amount: number): void => {
-    var filter = new fabric.Image.filters.Brightness({ brightness: amount });
+    const filter = new fabric.Image.filters.Brightness({ brightness: amount });
     applyFilter(filter);
   };
 
   const changeToGrayScale = (): void => {
-    var filter = new fabric.Image.filters.Grayscale();
+    const filter = new fabric.Image.filters.Grayscale();
     applyFilter(filter);
   };
 

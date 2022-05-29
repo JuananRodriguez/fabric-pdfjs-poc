@@ -18,18 +18,6 @@ export const MainCanvas = styled.div`
     overflow: auto;
     width: 100%;
     height: 100%;
-
-    & .canvas-container {
-      position: absolute;
-      background: grey;
-      z-index: 2;
-    }
-
-    & > canvas.hidden {
-      position: absolute;
-      z-index: 1;
-      visibility: hidden;
-    }
   }
 `;
 
@@ -38,17 +26,19 @@ export const SidebarPreviewStyled = styled.aside`
   padding: 0.5rem;
   overflow: auto;
   min-height: 100%;
+`;
 
-  & .thumbnail {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-    background: white;
-    width: 120px;
-    cursor: pointer;
+export const ThumbnailStyled = styled.div`
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  background: white;
+  width: 120px;
+  cursor: pointer;
 
-    &.selected {
-      outline: solid;
-    }
+  outline: ${({ selected }) => (selected ? "solid" : "none")};
+
+  & > img {
+    width: 100%;
   }
 `;
 

@@ -2,17 +2,17 @@ import { SidebarPreviewStyled } from "./components.styled";
 import { Thumbnail } from "./Thumbnail";
 
 export const SidebarPreview = ({
-  allPDFPages,
+  allPDFImages,
   onSelectThumbnail,
   pageSelected,
 }) => {
   return (
     <SidebarPreviewStyled>
-      {allPDFPages.map((PDFpage, index) => (
+      {allPDFImages.map((image, index) => (
         <Thumbnail
           selected={index === pageSelected}
           key={index}
-          PDFpage={PDFpage}
+          PDFImage={image}
           pageNumber={index}
           onSelectThumbnail={onSelectThumbnail}
         />
