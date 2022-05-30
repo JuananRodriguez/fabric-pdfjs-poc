@@ -1,6 +1,8 @@
-import { useState, useCallback, useEffect, useLayoutEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 // import { useWindowResize } from "./useWindowResize.hook";
 import { PDFReader } from "./PDFReader";
+import { jsPDF } from "./libs";
+import { imageDataToImg, imageDataToCanvas } from "./helpers";
 
 // Components
 import { SidebarPreview } from "./SidebarPreview";
@@ -9,6 +11,7 @@ import { EditableArea } from "./EditableArea";
 
 // import { renderImage } from "../Fabric/helpers/renderImage.helper";
 // import { fabric } from "fabric";
+import { saveAs } from "file-saver";
 
 export const PDFViewer = ({ file }) => {
   const [pdf, setPdf] = useState(null);
@@ -39,6 +42,26 @@ export const PDFViewer = ({ file }) => {
     const newAllPDFImages = [...allPDFImages];
     newAllPDFImages[pageSelected] = imageData;
     setAllPDFImages(newAllPDFImages);
+
+    // const canvas = imageDataToCanvas(imageData);
+    const img = imageDataToImg(imageData);
+
+    const canvas = document.querySelector(
+      ".canvas-container > canvas.lower-canvas"
+    );
+
+    // const img = canvas.toDataURL("image/png");
+
+    const { width, height } = canvas;
+
+    const doc = new jsPDF(width > height ? "landscape" : "portrait", "px");
+
+    doc.deletePage(1);
+    doc.addPage([width, height], width > height ? "landscape" : "portrait");
+    doc.addImage(img, "PNG", 0, 0, width, height);
+
+    const blob = new Blob([doc.output("blob")], { type: "application/pdf" });
+    saveAs(blob, "image.pdf");
   };
 
   const onRemoveSelectedPage = () => {

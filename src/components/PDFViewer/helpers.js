@@ -1,4 +1,5 @@
 import { fabric } from "./libs";
+import { createCanvas } from "canvas";
 
 export async function renderPage({ PDFpage, scale = 1, canvas }) {
   if (canvas) {
@@ -51,12 +52,11 @@ export const renderImage: RenderImage = (file) => {
 };
 
 export const imageDataToCanvas = (imageData) => {
-  // const width = canvas.offsetWidth || canvas.width;
-  // const height = canvas.offsetHeight || canvas.height;
-console.log(imageData)
+  // const canvas = createCanvas(imageData.width, imageData.height); // width node-canvas
   let canvas = document.createElement("canvas");
   canvas.setAttribute("width", imageData.width);
   canvas.setAttribute("height", imageData.height);
+  console.log(imageData.width, imageData.height);
   canvas.getContext("2d").putImageData(imageData, 0, 0);
   return canvas;
 };
@@ -64,11 +64,11 @@ console.log(imageData)
 export const canvasToImageData = (canvas) => {
   const width = canvas.offsetWidth || canvas.width;
   const height = canvas.offsetHeight || canvas.height;
+  console.log({ width, height });
   return canvas.getContext("2d").getImageData(0, 0, width, height);
 };
 
 export const imageDataToImg = (imageData) => {
-  console.log('dentrooooooo')
   const canvas = imageDataToCanvas(imageData);
-  return canvas.toDataURL();
+  return canvas.toDataURL("image/png");
 };

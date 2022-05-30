@@ -54,8 +54,8 @@ export const EditableArea = ({
       <div className="scroller">
         <canvas
           ref={domCanvas}
-          dataHeight={PDFImage.height}
-          dataWidth={PDFImage.width}
+          data-height={PDFImage.height}
+          data-width={PDFImage.width}
         />
       </div>
     </>
