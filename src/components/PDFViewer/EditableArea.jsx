@@ -1,6 +1,13 @@
 import { useRef, useEffect } from "react";
-import { imageDataToCanvas, canvasToImageData } from "./helpers";
+import {
+  imageDataToCanvas,
+  imageDataToImg,
+  canvasToImageData,
+  imageDataFromImage,
+} from "./helpers";
 import { fabric } from "./libs";
+import { jsPDF } from "./libs";
+import { saveAs } from "file-saver";
 
 export const EditableArea = ({
   PDFImage,
@@ -39,9 +46,30 @@ export const EditableArea = ({
     }
   }, [PDFImage]);
 
-  const onSave = () => {
-    const imageData = canvasToImageData(domCanvas.current);
+  const onSave = async () => {
+    // const imageData = canvasToImageData(domCanvas.current);
+    const img = domCanvas.current.toDataURL("image/png");
+    const width = domCanvas.current.offsetWidth;
+    const height = domCanvas.current.offsetHeight;
+    const imageData = await imageDataFromImage(img, width, height);
     onSavePDFImage(imageData);
+
+    // onSavePDFImage(imageData);
+    // const img = domCanvas.current.toDataURL("image/png")
+
+    //   // const canvas = imageDataToCanvas(imageData);
+    //   const img = imageDataToImg(imageData);
+
+    // const { width, height } = domCanvas.current;
+
+    // const doc = new jsPDF(width > height ? "landscape" : "portrait", "px");
+
+    // doc.deletePage(1);
+    // doc.addPage([width, height], width > height ? "landscape" : "portrait");
+    // doc.addImage(img, "PNG", 0, 0, width, height);
+
+    // const blob = new Blob([doc.output("blob")], { type: "application/pdf" });
+    // saveAs(blob, "image.pdf");
   };
 
   return (

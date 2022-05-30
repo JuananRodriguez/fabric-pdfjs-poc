@@ -56,7 +56,6 @@ export const imageDataToCanvas = (imageData) => {
   let canvas = document.createElement("canvas");
   canvas.setAttribute("width", imageData.width);
   canvas.setAttribute("height", imageData.height);
-  console.log(imageData.width, imageData.height);
   canvas.getContext("2d").putImageData(imageData, 0, 0);
   return canvas;
 };
@@ -64,7 +63,6 @@ export const imageDataToCanvas = (imageData) => {
 export const canvasToImageData = (canvas) => {
   const width = canvas.offsetWidth || canvas.width;
   const height = canvas.offsetHeight || canvas.height;
-  console.log({ width, height });
   return canvas.getContext("2d").getImageData(0, 0, width, height);
 };
 
@@ -72,3 +70,17 @@ export const imageDataToImg = (imageData) => {
   const canvas = imageDataToCanvas(imageData);
   return canvas.toDataURL("image/png");
 };
+
+export async function imageDataFromImage(img, width, height) {
+  const image = Object.assign(new Image(), { src: img });
+  await new Promise((resolve) =>
+    image.addEventListener("load", () => resolve())
+  );
+  const context = Object.assign(document.createElement("canvas"), {
+    width,
+    height,
+  }).getContext("2d");
+  context.imageSmoothingEnabled = false;
+  context.drawImage(image, 0, 0, width, height);
+  return context.getImageData(0, 0, width, height);
+}

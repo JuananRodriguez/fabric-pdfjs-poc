@@ -43,16 +43,29 @@ export const PDFViewer = ({ file }) => {
     newAllPDFImages[pageSelected] = imageData;
     setAllPDFImages(newAllPDFImages);
 
-    // const canvas = imageDataToCanvas(imageData);
-    const img = imageDataToImg(imageData);
+    //   // const canvas = imageDataToCanvas(imageData);
+    //   const img = imageDataToImg(imageData);
 
-    const canvas = document.querySelector(
-      ".canvas-container > canvas.lower-canvas"
-    );
+    //   const { width, height } = canvas;
 
+    //   const doc = new jsPDF(width > height ? "landscape" : "portrait", "px");
+
+    //   doc.deletePage(1);
+    //   doc.addPage([width, height], width > height ? "landscape" : "portrait");
+    //   doc.addImage(img, "PNG", 0, 0, width, height);
+
+    //   const blob = new Blob([doc.output("blob")], { type: "application/pdf" });
+    //   saveAs(blob, "image.pdf");
+  };
+
+  const handleDownload = () => {
+    // const canvas = document.getElementById("the-canvas").firstChild;
     // const img = canvas.toDataURL("image/png");
 
-    const { width, height } = canvas;
+    const imageData = allPDFImages[pageSelected];
+    const img = imageDataToImg(imageData);
+
+    const { width, height } = imageData;
 
     const doc = new jsPDF(width > height ? "landscape" : "portrait", "px");
 
@@ -70,6 +83,12 @@ export const PDFViewer = ({ file }) => {
     );
   };
 
+  const handleSetCanvas = () => {
+    const canvas = imageDataToCanvas(allPDFImages[pageSelected]);
+    const node = document.getElementById("the-canvas");
+    node.appendChild(canvas);
+  };
+
   return (
     <>
       <button
@@ -84,6 +103,8 @@ export const PDFViewer = ({ file }) => {
       >
         next
       </button>
+      <button onClick={handleSetCanvas}>setCanvas</button>
+      <button onClick={handleDownload}>download</button>
       <ViewerWrapper>
         <SidebarPreview
           pageSelected={pageSelected}
@@ -97,6 +118,7 @@ export const PDFViewer = ({ file }) => {
             onRemovePDFImage={onRemoveSelectedPage}
           />
         </MainCanvas>
+        <div id="the-canvas" />
       </ViewerWrapper>
     </>
   );
