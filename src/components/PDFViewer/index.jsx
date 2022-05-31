@@ -42,37 +42,20 @@ export const PDFViewer = ({ file }) => {
     const newAllPDFImages = [...allPDFImages];
     newAllPDFImages[pageSelected] = imageData;
     setAllPDFImages(newAllPDFImages);
-
-    //   // const canvas = imageDataToCanvas(imageData);
-    //   const img = imageDataToImg(imageData);
-
-    //   const { width, height } = canvas;
-
-    //   const doc = new jsPDF(width > height ? "landscape" : "portrait", "px");
-
-    //   doc.deletePage(1);
-    //   doc.addPage([width, height], width > height ? "landscape" : "portrait");
-    //   doc.addImage(img, "PNG", 0, 0, width, height);
-
-    //   const blob = new Blob([doc.output("blob")], { type: "application/pdf" });
-    //   saveAs(blob, "image.pdf");
   };
 
   const handleDownload = () => {
-    // const canvas = document.getElementById("the-canvas").firstChild;
-    // const img = canvas.toDataURL("image/png");
-
-    const imageData = allPDFImages[pageSelected];
-    const img = imageDataToImg(imageData);
-
-    const { width, height } = imageData;
-
-    const doc = new jsPDF(width > height ? "landscape" : "portrait", "px");
-
+    const doc = new jsPDF("portrait", "px");
     doc.deletePage(1);
-    doc.addPage([width, height], width > height ? "landscape" : "portrait");
-    doc.addImage(img, "PNG", 0, 0, width, height);
 
+    allPDFImages.forEach((imageData) => {
+      const img = imageDataToImg(imageData);
+      const { width, height } = imageData;
+
+      doc.addPage([width, height], width > height ? "landscape" : "portrait");
+      doc.addImage(img, "PNG", 0, 0, width, height);
+    });
+    
     const blob = new Blob([doc.output("blob")], { type: "application/pdf" });
     saveAs(blob, "image.pdf");
   };
