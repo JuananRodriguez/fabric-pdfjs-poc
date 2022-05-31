@@ -55,11 +55,7 @@ export const EditableArea = ({
         <button onClick={onRemovePDFImage}> Remove</button>
       </div>
       <div className="scroller">
-        <canvas
-          ref={domCanvas}
-          data-height={PDFImage.height}
-          data-width={PDFImage.width}
-        />
+        <canvas ref={domCanvas} />
       </div>
     </>
   );

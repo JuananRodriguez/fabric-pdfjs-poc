@@ -51,7 +51,7 @@ export const PDFViewer = ({ file }) => {
       const { width, height } = imageData;
 
       doc.addPage([width, height], width > height ? "landscape" : "portrait");
-      doc.addImage(img, "PNG", 0, 0, width, height, "", "FAST");
+      doc.addImage(img, "PNG", 0, 0, width, height, "", "MEDIUM");
     });
 
     const blob = new Blob([doc.output("blob")], { type: "application/pdf" });
@@ -60,7 +60,7 @@ export const PDFViewer = ({ file }) => {
 
   const onRemoveSelectedPage = () => {
     setAllPDFImages((allPDFImages) =>
-      allPDFImages.filter((i) => i !== allPDFImages[pageSelected])
+      allPDFImages.filter((img, index) => index !== pageSelected)
     );
   };
 
