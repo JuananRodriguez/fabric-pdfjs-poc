@@ -1,5 +1,4 @@
 import { fabric } from "./libs";
-import { createCanvas } from "canvas";
 
 export async function renderPage({ PDFpage, scale = 1, canvas }) {
   if (canvas) {

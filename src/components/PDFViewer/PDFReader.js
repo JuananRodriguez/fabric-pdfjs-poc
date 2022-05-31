@@ -32,7 +32,11 @@ class PDFObject {
     const pages = await this.getPages();
 
     const canvasPromises = pages.map(async (PDFpage, index) => {
-      const viewport = PDFpage.getViewport({ scale: 1 });
+      const { width: currentWidth } = PDFpage.getViewport({
+        scale: 1,
+      });
+
+      const viewport = PDFpage.getViewport({ scale: 1000 / currentWidth });
       let DOMCanvas = document.createElement("canvas");
       DOMCanvas.setAttribute("width", viewport.width);
       DOMCanvas.setAttribute("height", viewport.height);

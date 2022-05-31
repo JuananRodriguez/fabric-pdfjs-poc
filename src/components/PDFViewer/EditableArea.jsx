@@ -1,13 +1,6 @@
 import { useRef, useEffect } from "react";
-import {
-  imageDataToCanvas,
-  imageDataToImg,
-  canvasToImageData,
-  imageDataFromImage,
-} from "./helpers";
+import { imageDataToCanvas, imageDataFromImage } from "./helpers";
 import { fabric } from "./libs";
-import { jsPDF } from "./libs";
-import { saveAs } from "file-saver";
 
 export const EditableArea = ({
   PDFImage,

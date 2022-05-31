@@ -9,8 +9,6 @@ import { SidebarPreview } from "./SidebarPreview";
 import { ViewerWrapper, MainCanvas } from "./components.styled";
 import { EditableArea } from "./EditableArea";
 
-// import { renderImage } from "../Fabric/helpers/renderImage.helper";
-// import { fabric } from "fabric";
 import { saveAs } from "file-saver";
 
 export const PDFViewer = ({ file }) => {
@@ -53,9 +51,9 @@ export const PDFViewer = ({ file }) => {
       const { width, height } = imageData;
 
       doc.addPage([width, height], width > height ? "landscape" : "portrait");
-      doc.addImage(img, "PNG", 0, 0, width, height);
+      doc.addImage(img, "PNG", 0, 0, width, height, "", "FAST");
     });
-    
+
     const blob = new Blob([doc.output("blob")], { type: "application/pdf" });
     saveAs(blob, "image.pdf");
   };
